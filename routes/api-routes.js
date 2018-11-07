@@ -1,8 +1,8 @@
-const db = require("../models/message-model");
+const db = require("../models/index");
 
 module.exports = function(app){
     app.post("/messages", function(req, res){
-        db.create(req.body)
+        db.Messages.create(req.body)
         .then(function(data){
             res.json(data);
         })
@@ -11,7 +11,7 @@ module.exports = function(app){
         })
     })
     app.get("/messages", function(req, res){
-        db.find({})
+        db.Messages.find({})
         .then(function(data){
             res.json(data);
         })
