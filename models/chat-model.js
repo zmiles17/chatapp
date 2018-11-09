@@ -3,14 +3,18 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const chatModel = new Schema ({
-    messages: [{
+    messages: [
+        {
         type: Schema.Types.ObjectId,
         ref: 'Messages'
-    }],
-    userNames: [{
+    }
+],
+    users: [
+        {
         type: Schema.Types.ObjectId,
-        ref: 'Messages'
-    }]
+        ref: 'Users'
+    }
+]
 });
 
 const Chats = mongoose.model("Chats", chatModel);

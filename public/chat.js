@@ -1,15 +1,25 @@
 const socket = io();
-let name;
-let name2;
+let name = localStorage.getItem('user');
+socket.emit('new-name', {name: name});
 
 //------------------------------------------------------functions-------------------------------------------------------------------
+(function logout () {
+    if (name) {
+        $('.login').text('Logout').addClass('logout').removeClass('login');
+        $('.logout').on('click', function () {
+            localStorage.clear();
+        })
+    }
+})();
 
 function sendMessage (event) {
     event.preventDefault();
+    let name2 = localStorage.getItem('user2');
     const message = $("#message").val();
     $("#message").val("");
     $.post("/messages", { sender: name, message: message })
     .then(function (res) {
+        console.log(res);
         socket.emit("new-message", { message: message , user1: name, user2: name2});
         getMessages();
     })
@@ -17,14 +27,10 @@ function sendMessage (event) {
 
 function startChat (event) {
     event.preventDefault();
-    //empty chat area
-    name2 = $("select").find(":selected").text();
+    $('.chat-box').empty();
+    localStorage.setItem('user2', $("select").find(":selected").text());
 }
-function sendName (event) {
-    event.preventDefault();
-    name = $("#name").val().trim();
-    socket.emit("new-name", {name:name});
-}
+
 
 function getMessages() {
     $(".chat-box").empty();
@@ -59,5 +65,4 @@ socket.on("emit-message", function (data) {
 //---------------------------------------------event listeners-------------------------------------------------------------------------
 
 $("#send-msg").on("click", sendMessage);
-$("#send-name").on("click", sendName);
 $("#select-container").on("change", "select", startChat);
